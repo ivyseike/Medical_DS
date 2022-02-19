@@ -25,15 +25,16 @@ class ExperienceReplayMemory:
         return len(self.buffer)
 # Mutable Buffer
 class MutExperienceReplayMemory:
-    def __init__(self, success_rate_threshold=0.3):
+    def __init__(self, capacity, success_rate_threshold=0.3):
         self.buffer = []
         self.success_rate_threshold = success_rate_threshold
         self.best_success_rate = 0.0
+        self.capacity = capacity
 
     def push(self, transition):
         self.buffer.append(transition)
-        # if len(self.memory) > self.capacity:
-        #     del self.memory[0]
+        if len(self.buffer) > self.capacity:
+            del self.buffer[0]
     def clear(self):
         self.buffer = []
 

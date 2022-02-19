@@ -1,0 +1,357 @@
+Cat scratch disease
+Dengue fever
+Gas gangrene
+Chickenpox
+Granuloma inguinale
+Chagas disease
+Chancroid
+Chlamydia
+Acariasis
+Gonorrhea
+Fluid overload
+Diabetic ketoacidosis
+Amyloidosis
+Diabetes insipidus
+Diabetic retinopathy
+Diabetic peripheral neuropathy
+Carcinoid syndrome
+Graves disease
+Cushing syndrome
+Cystic Fibrosis
+Conversion disorder
+Chronic pain disorder
+Acute stress reaction
+Factitious disorder
+Alcohol intoxication
+Eating disorder
+Anxiety
+Dissociative disorder
+Drug abuse cocaine
+Adjustment reaction
+Cerebral edema
+Degenerative disc disease
+Guillain Barre syndrome
+Complex regional pain syndrome
+Amyotrophic lateral sclerosis ALS
+Encephalitis
+Carpal tunnel syndrome
+Extrapyramidal effect of drugs
+Essential tremor
+Alzheimer disease
+Conjunctivitis due to allergy
+Ectropion
+Endophthalmitis
+Cyst of the eyelid
+Chalazion
+Corneal disorder
+Conductive hearing loss
+Central retinal artery or vein occlusion
+Acute glaucoma
+Aphakia
+Erythema multiforme
+Dyshidrosis
+Actinic keratosis
+Dermatitis due to sun exposure
+Eczema
+Contact dermatitis
+Diaper rash
+Acne
+Acanthosis nigricans
+Decubitus ulcer
+Fibromyalgia
+Connective tissue disorder
+Ganglion cyst
+Ankylosing spondylitis
+De Quervain disease
+Chronic back pain
+Gout
+Flat feet
+Adhesive capsulitis of the shoulder
+Chondromalacia of the patella
+Cystitis
+Epididymitis
+Acute kidney injury
+Endometriosis
+Erectile dysfunction
+Endometrial cancer
+Endometrial hyperplasia
+Fibrocystic breast disease
+Female infertility of unknown cause
+Chronic kidney disease
+Air embolism
+Fat embolism
+Drug reaction
+Carbon monoxide poisoning
+Fracture of the pelvis
+Fracture of the rib
+Allergy
+Concussion
+Epidural hemorrhage
+Corneal abrasion
+UNK
+Foot or toe stiffness or tightness
+Disturbance of smell or taste
+Hoarse voice
+Congestion in chest
+Vaginal pain
+Leg cramps or spasms
+Frequent urination
+Hand or finger stiffness or tightness
+Neck cramps or spasms
+Nightmares
+Symptoms of eye
+Nose deformity
+Difficulty in swallowing
+Spots or clouds in vision
+Vomiting blood
+Skin pain
+Lack of growth
+Pain during pregnancy
+Diminished vision
+Sleepiness
+Paresthesia
+Hot flashes
+Rib pain
+Ache all over
+Swollen or red tonsils
+Fluid in ear
+Pus in urine
+Scanty menstrual flow
+Skin irritation
+Fatigue
+Abnormal movement of eyelid
+Abnormal size or shape of ear
+Knee stiffness or tightness
+Elbow weakness
+Retention of urine
+Sore throat
+Leg pain
+Sweating
+Emotional symptoms
+Leg weakness
+Eye deviation
+Hip pain
+Painful sinuses
+White discharge from eye
+Irregular heartbeat
+Symptoms of prostate
+Back cramps or spasms
+Irregular appearing scalp
+Redness in ear
+Acne or pimples
+Loss of sex drive
+Too little hair
+Muscle swelling
+Abnormal involuntary movements
+Itchy eyelid
+Knee weakness
+Groin mass
+Lacrimation
+Penis redness
+Pain during intercourse
+Muscle weakness
+Knee pain
+Shoulder pain
+Spotting or bleeding during pregnancy
+Swollen eye
+Allergic reaction
+Foot or toe swelling
+Skin growth
+Low self-esteem
+Diarrhea
+Mass in scrotum
+Swelling of scrotum
+Suprapubic pain
+Eye burns or stings
+Vulvar sore
+Ankle swelling
+Wrist lump or mass
+Penis pain
+Diminished hearing
+Difficulty eating
+Irritable infant
+Ear pain
+Wrinkles on skin
+Bones are painful
+Muscle pain
+Abusing alcohol
+Temper problems
+Back weakness
+Focal weakness
+Arm swelling
+Cough
+Blindness
+Muscle stiffness or tightness
+Arm weakness
+Feeling hot and cold
+Hysterical behavior
+Vaginal bleeding after menopause
+Problems with movement
+Knee swelling
+Increased heart rate
+Lip swelling
+Hip stiffness or tightness
+Warts
+Hemoptysis
+Joint pain
+Incontinence of stool
+Lump or mass of breast
+Double vision
+Bleeding or discharge from nipple
+Weight gain
+Heavy menstrual flow
+Irregular belly button
+Neck stiffness or tightness
+Symptoms of the face
+Low back pain
+Joint stiffness or tightness
+Sharp chest pain
+Impotence
+Elbow pain
+Lower abdominal pain
+Ankle pain
+Shoulder swelling
+Difficulty speaking
+Excessive urination at night
+Throat swelling
+Premature ejaculation
+Skin lesion
+Swollen abdomen
+Hand or finger pain
+Headache
+Facial pain
+Drug abuse
+Intermenstrual bleeding
+Eye redness
+Bleeding from eye
+Hurts to breath
+Ringing in ear
+Long menstrual periods
+Shoulder stiffness or tightness
+Infant spitting up
+Skin rash
+Cross-eyed
+Bladder mass
+Thirst
+Foreign body sensation in eye
+Back pain
+Chest tightness
+Fears and phobias
+Feet turned in
+Unusual color or odor to urine
+Dizziness
+Painful urination
+Back stiffness or tightness
+Diaper rash symptom
+Arm lump or mass
+Difficulty breathing
+Hand or finger weakness
+Nasal congestion
+Sharp abdominal pain
+Vomiting
+Excessive appetite
+Sneezing
+Stiffness all over
+Kidney mass
+Painful menstruation
+Skin moles
+Eyelid swelling
+Depressive or psychotic symptoms
+Low back weakness
+Skin on leg or foot looks infected
+Foot or toe pain
+Lower body pain
+Restlessness
+Ankle stiffness or tightness
+Muscle cramps, contractures, or spasms
+Elbow cramps or spasms
+Knee lump or mass
+Dry or flaky scalp
+Eye strain
+Hand or finger swelling
+Excessive growth
+Wrist swelling
+Plugged feeling in ear
+Unpredictable menstruation
+Swollen tongue
+Hand or finger cramps or spasms
+Itching of scrotum
+Decreased appetite
+Polyuria
+Skin dryness, peeling, scaliness, or roughness
+Fever
+Fluid retention
+Lymphedema
+Arm pain
+Mass on eyelid
+Wrist weakness
+Peripheral edema
+Vaginal itching
+Blood in urine
+Back mass or lump
+Loss of sensation
+Involuntary urination
+Disturbance of memory
+Infrequent menstruation
+Chills
+Itchy scalp
+Feeling cold
+Nailbiting
+Burning abdominal pain
+Absence of menstruation
+Pulling at ears
+Arm stiffness or tightness
+Pain or soreness of breast
+Pelvic pain
+Delusions or hallucinations
+Hand or finger lump or mass
+Pus in sputum
+Penile discharge
+Leg swelling
+Frequent menstruation
+Decreased heart rate
+Seizures
+Abnormal appearing skin
+Pain in eye
+Vaginal discharge
+Hostile behavior
+Drainage in throat
+Mass on vulva
+Apnea
+Bowlegged or knock-kneed
+Neck pain
+Skin swelling
+Weakness
+Shoulder cramps or spasms
+Symptoms of bladder
+Pain in testicles
+Anxiety and nervousness
+Excessive anger
+Problems during pregnancy
+Fainting
+Insomnia
+Poor circulation
+Cramps and spasms
+Shortness of breath
+Side pain
+Depression
+Groin pain
+Wrist stiffness or tightness
+Symptoms of the kidneys
+Sinus congestion
+Infertility
+Itching of skin
+Palpitations
+Frontal headache
+Nausea
+Foot or toe lump or mass
+Mouth ulcer
+Neck swelling
+Skin on arm or hand looks infected
+Unwanted hair
+Wrist pain
+Feeling ill
+Eyelid lesion or rash
+Coryza
+Itchiness of eye
+Bleeding gums

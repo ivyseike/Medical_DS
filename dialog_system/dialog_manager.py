@@ -56,7 +56,7 @@ class DialogManager:
         self.sys_action = self.state_tracker.dialog_history_dictionaries()[-1]
         self.user_action, self.episode_over, self.dialog_status, hit = self.user.next(self.sys_action)
 
-        self.reward = self.reward_function(self.dialog_status, hit)
+        self.reward = self.reward_function(self.dialog_status, hit, self.user_action['turn'])
 
         #   Update state tracker with latest user action
         if self.episode_over != True:
@@ -71,14 +71,17 @@ class DialogManager:
         return self.episode_over, self.reward, self.dialog_status, self.hit_rate
 
 
-    def reward_function(self, dialog_status, hit_rate):
+    def reward_function(self, dialog_status, hit_rate, turn_num):
         """ Reward Function 1: a reward function based on the dialog_status """
         if dialog_status == dialog_config.FAILED_DIALOG:
-            reward = -1*self.user.max_turn  # -22
+            if turn_num < 10:
+                reward = -1*self.user.max_turn - (10 - turn_num)  # -22
+            else:
+                reward = -1*self.user.max_turn
         elif dialog_status == dialog_config.SUCCESS_DIALOG:
             reward =  2 * self.user.max_turn  # 44
         else:
-            reward = -1 + hit_rate
+            reward = hit_rate
         return reward
 
 

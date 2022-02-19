@@ -33,7 +33,8 @@ class StateTracker:
     def initialize_episode(self):
         """ Initialize a new episode (dialog), flush the current state and tracked slots """
 
-        self.action_dimension = 36
+        
+        self.action_dimension = 36 #没作用？
         self.history_dictionaries = []
         self.turn_count = 0
         self.current_slots = {}
