@@ -5,65 +5,54 @@ goal_set = pickle.load(open("goal_set.p", "rb"))
 train_set = goal_set["train"]
 test_set = goal_set["test"]
 
-# action_set = pickle.load(open("action_set.p", "rb"))
-# print(action_set)
-
-disease_symp = pickle.load(open("disease_symptom.p", "rb"))
 slot_set = pickle.load(open("slot_set.p","rb"))
-disease_set = pickle.load(open("disease_set.p", "rb"))
+# # disease_set = pickle.load(open("disease_set.p", "rb"))
 
-# with open("disease_set.p", "wb") as f:
-#     pickle.dump(disease_set, f)
-arr = np.zeros([len(disease_symp), len(slot_set)-1])
-sym_disease = np.zeros([len(slot_set)-1, len(disease_symp)])
-prior_sym = np.zeros([len(slot_set)-1])
+print(slot_set)
+# del slot_set['disease']
+# key = slot_set['Diaper rash']
+# del slot_set['Diaper rash']
+# slot_set['Diaper rash symptom'] = key
 
-# for key, val in disease_symp.items():
-#     idx = val['index']
-#     for sym, freq in val['symptom'].items():
-#         sym_idx = slot_set[sym]
-#         arr[idx][sym_idx] = freq
-
-# print(arr)
-
-# print(slot_set)
-# print(len(slot_set))
-
-for s in train_set:
-    # print(s["consult_id"])
-    # print(s["disease_tag"])
-    # print(s["goal"])
-    for k, v in s["goal"]["explicit_inform_slots"].items():
-        if v is True:
-            arr[disease_set[s["disease_tag"]]][slot_set[k]] += 1
-            prior_sym[slot_set[k]] += 1
-            sym_disease[slot_set[k]][disease_set[s["disease_tag"]]] += 1
-    for k, v in s["goal"]["implicit_inform_slots"].items():
-        if v is True:
-            arr[disease_set[s["disease_tag"]]][slot_set[k]] += 1
-            prior_sym[slot_set[k]] += 1
-            sym_disease[slot_set[k]][disease_set[s["disease_tag"]]] += 1
+# with open("slot_set.p", "wb") as f:
+#     pickle.dump(slot_set, f)
 
 
-sum_ = np.sum(arr, axis=1)
-sum_2 = np.sum(sym_disease, axis=1)
-sum_3 = np.sum(prior_sym, axis=0)
+# symptoms = [None for i in range(len(slot_set))]
 
-# print(sum_)
-# print(sum_2)
-# print(sum_3)
-for i in range(len(disease_symp)):
-    arr[i] /= sum_[i]
+# for key, idx in slot_set.items():
+#     symptoms[idx] = key
 
-for i in range(len(slot_set)-1):
-    prior_sym[i] /= sum_3
-    sym_disease[i] /= sum_2[i]
+# print(symptoms)
 
-print(arr)
-print(sym_disease)
-print(prior_sym)
+# with open("symptoms.txt", "w") as f:
+#  for i in range(len(symptoms)):
+#      f.write(symptoms[i] + '\n')
 
-np.savetxt("prior_symptom.txt", prior_sym, fmt="%.8f")
-np.savetxt("symptom_given_disease.txt", arr, fmt="%.8f")
-np.savetxt("disease_given_symptom.txt", sym_disease, fmt="%.8f")
+# symptoms_cnt = {}
+
+# for s in train_set+test_set:
+#     for k, v in s["goal"]["explicit_inform_slots"].items():
+#         if v is True:
+#             if k not in symptoms_cnt.keys():
+#                 symptoms_cnt[k] = 1
+#             else:
+#                 symptoms_cnt[k] += 1
+#     for k, v in s["goal"]["implicit_inform_slots"].items():
+#         if v is True:
+#             if k not in symptoms_cnt.keys():
+#                 symptoms_cnt[k] = 1
+#             else:
+#                 symptoms_cnt[k] += 1
+# print(symptoms_cnt)
+
+# sort_symptoms = sorted(symptoms_cnt.items(), key=lambda x:x[1], reverse=True)
+# # print(sort_symptoms)
+# high_freq = []
+# for p in sort_symptoms:
+#     high_freq.append(p[0])
+# # print(high_freq)
+
+# with open("req_dise_sym_dict.p", "wb") as f:
+#     pickle.dump(high_freq, f)
 

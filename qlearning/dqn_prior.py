@@ -69,7 +69,7 @@ class KR_DQN(nn.Module):
         self.sym_dise_mat = sym_dise_pro
         self.dise_sym_mat = dise_sym_pro
         self.sym_prio = sym_prio
-        self.dise_num =dise_num
+        self.dise_num = dise_num
         self.symp_num = symp_num
 
         self.fc1 = nn.Linear(self.input_shape, self.hidden_size)
@@ -108,66 +108,6 @@ class KR_DQN(nn.Module):
         return a.item()
 
 
-class KR_DuelingDQN(nn.Module):
-    def __init__(self, input_shape, hidden_size, num_actions, relation_init, 
-                dise_start, act_cardinality, slot_cardinality,  sym_dise_pro, 
-                dise_sym_pro, sym_prio, dise_num, symp_num, kg_enbaled=True):
-        super(KR_DuelingDQN, self).__init__()
-
-        self.input_shape = input_shape
-        self.num_actions = num_actions
-        self.hidden_size = hidden_size
-        self.dise_start = dise_start
-        self.act_cardinality = act_cardinality
-        self.slot_cardinality = slot_cardinality
-        self.sym_dise_mat = sym_dise_pro
-        self.dise_sym_mat = dise_sym_pro
-        self.sym_prio = sym_prio
-        self.dise_num =dise_num
-        self.symp_num = symp_num
-
-        self.fc1 = nn.Linear(self.input_shape, self.hidden_size)
-        self.fc2 = nn.Linear(self.hidden_size, self.hidden_size)
-        # self.fc2 = nn.Linear(self.hidden_size, self.num_actions)
-        self.V = nn.Linear(self.hidden_size, 1)
-        self.A = nn.Linear(self.hidden_size, self.num_actions)
-
-        self.tran_mat = Parameter(torch.Tensor(relation_init.size(0),relation_init.size(1)))
-        self.knowledge_branch = Knowledge_Graph_Reasoning(self.num_actions, self.dise_start, self.act_cardinality, self.slot_cardinality, 
-            self.dise_sym_mat, self.sym_dise_mat, self.sym_prio, self.dise_num, self.symp_num)
-
-        self.tran_mat.data = relation_init
-        self.kg_enabled = kg_enbaled
-
-        #self.reset_parameters()
-    def reset_parameters(self):
-        stdv = 1.0 / math.sqrt(self.hidden_size)
-        self.tran_mat.data.uniform_(-stdv, stdv)
-    def forward(self, state, sym_flag):
-        # print(sym_flag.size())
-        x = F.relu(self.fc1(state))
-        x = F.relu(self.fc2(x))
-        V = self.V(x)
-        A = self.A(x)
-
-        rule_res = self.knowledge_branch(state)
-        relation_res = torch.matmul(x, F.softmax(self.tran_mat, 0))
-        # dqn+knowledge+relation
-        if self.kg_enabled:
-            x = torch.sigmoid(x) + torch.sigmoid(relation_res) + rule_res
-        else:
-            x = torch.sigmoid(x)
-
-        x = x * sym_flag
-        
-        return x
-
-    def predict(self, x, sym_flag):
-        with torch.no_grad():
-            a = self.forward(x, sym_flag).max(1)[1].view(1, 1)
-        return a.item()
-
-    
 class DQN(nn.Module):
     def __init__(self, input_shape, num_actions, noisy=False, sigma_init=0.5, body=SimpleBody):
         super(DQN, self).__init__()
@@ -251,10 +191,12 @@ class CategoricalDQN(nn.Module):
         self.atoms = atoms
 
         self.body = body(input_shape, num_outputs, noisy, sigma_init)
+        
+        self.hidden_size = 256
 
-        self.fc1 = nn.Linear(self.body.feature_size(), 512) if not self.noisy else NoisyLinear(self.body.feature_size(),
-                                                                                               512, sigma_init)
-        self.fc2 = nn.Linear(512, self.num_actions * self.atoms) if not self.noisy else NoisyLinear(512,
+        self.fc1 = nn.Linear(self.body.feature_size(), self.hidden_size) if not self.noisy else NoisyLinear(self.body.feature_size(),
+                                                                                            self.hidden_size, sigma_init)
+        self.fc2 = nn.Linear(self.hidden_size, self.num_actions * self.atoms) if not self.noisy else NoisyLinear(self.hidden_size,
                                                                                                     self.num_actions * self.atoms,
                                                                                                     sigma_init)
 
@@ -265,6 +207,12 @@ class CategoricalDQN(nn.Module):
         x = self.fc2(x)
 
         return F.softmax(x.view(-1, self.num_actions, self.atoms), dim=2)
+
+    def predict(self, x):
+        with torch.no_grad():
+            a = self.forward(x)
+            print(a)
+        return a.item()
 
     def sample_noise(self):
         if self.noisy:
@@ -482,3 +430,135 @@ class ActorCritic(nn.Module):
         weight_init(module.weight.data, gain=gain)
         bias_init(module.bias.data)
         return module
+
+
+class Master_KR_DQN(nn.Module):
+    def __init__(self, input_shape, hidden_size, num_actions, relation_init, 
+                sym_dise_pro, dise_sym_pro, sym_prio, dise_num, symp_num, kg_enbaled=True):
+        super(Master_KR_DQN, self).__init__()
+
+        self.input_shape = input_shape
+        self.num_actions = num_actions
+        self.hidden_size = hidden_size
+        # self.dise_start = dise_start
+        # self.act_cardinality = act_cardinality
+        # self.slot_cardinality = slot_cardinality
+        self.sym_dise_mat = sym_dise_pro
+        self.dise_sym_mat = dise_sym_pro
+        self.sym_prio = sym_prio
+        self.dise_num =dise_num
+        self.symp_num = symp_num
+
+        self.fc1 = nn.Linear(self.input_shape, self.hidden_size)
+        self.fc2 = nn.Linear(self.hidden_size, self.hidden_size)
+        self.fc3 = nn.Linear(self.hidden_size, self.num_actions)
+        self.kg_enabled = kg_enbaled
+        self.tran_mat = None
+        self.knowledge_branch = None
+        # if self.kg_enabled:
+        #     # self.tran_mat = Parameter(torch.Tensor(relation_init.size(0),relation_init.size(1)))
+        #     self.knowledge_branch = Knowledge_Graph_Reasoning(self.num_actions, self.dise_start, self.act_cardinality, self.slot_cardinality, 
+        #         self.dise_sym_mat, self.sym_dise_mat, self.sym_prio, self.dise_num, self.symp_num)
+
+        #     self.tran_mat.data = relation_init
+        # else:
+
+        #self.reset_parameters()
+    def reset_parameters(self):
+        stdv = 1.0 / math.sqrt(self.hidden_size)
+        self.tran_mat.data.uniform_(-stdv, stdv)
+    def forward(self, state):
+        # print(sym_flag.size())
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        
+
+        # dqn+knowledge+relation
+        if self.kg_enabled:
+            current_slots_rep = state[:, (2*self.act_cardinality+self.dise_num+1):(2*self.act_cardinality+self.slot_cardinality)]
+            
+            batch_size = state.size(0)
+            sym_prio_ = self.sym_prio.repeat(batch_size,1).view(batch_size, -1)
+
+            # not request->use prio prob
+            sym_prio_prob = torch.where(current_slots_rep == 0, sym_prio_, current_slots_rep)
+            # not sure->use prio prob
+            sym_prio_prob = torch.where(sym_prio_prob == -2, sym_prio_, sym_prio_prob)
+            #sym_prio_prob = torch.where(sym_prio_prob == -1, zeros, sym_prio_prob)
+            # print("sym_prio_prob", sym_prio_prob)
+
+            rule_res = torch.matmul(sym_prio_prob, self.sym_dise_mat)
+            rule_res = torch.cat((rule_res, torch.ones(rule_res.shape[0], 1)), 1)
+            # rule_res = torch.reshape(rule_res, (self.dise_num, 1))
+            # rule_res = torch.cat((rule_res.t(), torch.reshape(torch.mean(rule_res), (1,1))), 1)
+            x = torch.sigmoid(x) + rule_res
+            # x = torch.sigmoid(x) + torch.sigmoid(relation_res) + rule_res
+        else:
+            x = torch.sigmoid(x)
+        
+        return x
+
+    def predict(self, x):
+        with torch.no_grad():
+            a = self.forward(x).max(1)[1].view(1, 1)
+        return a.item()
+
+
+class Worker_KR_DQN(nn.Module):
+    def __init__(self, input_shape, hidden_size, num_actions, relation_init, 
+                sym_dise_pro, dise_num, symp_num, kg_enbaled=True):
+        super(Worker_KR_DQN, self).__init__()
+
+        self.input_shape = input_shape
+        self.num_actions = num_actions
+        self.hidden_size = hidden_size
+        # self.dise_start = dise_start
+        # self.act_cardinality = act_cardinality
+        # self.slot_cardinality = slot_cardinality
+        self.symp_num = symp_num
+        self.dise_num = dise_num
+        # self.sym_dise_mat = sym_dise_pro
+        if sym_dise_pro is not None:
+            self.sym_dise_mat = torch.reshape(sym_dise_pro, (1, self.num_actions))
+
+        self.fc1 = nn.Linear(self.input_shape, self.hidden_size)
+        self.fc2 = nn.Linear(self.hidden_size, self.hidden_size)
+        self.fc3 = nn.Linear(self.hidden_size, self.num_actions)
+        self.kg_enabled = kg_enbaled
+        # if self.kg_enabled:
+        # self.tran_mat = Parameter(torch.Tensor(relation_init.size(0),relation_init.size(1)))
+        # self.knowledge_branch = Knowledge_Graph_Reasoning(self.num_actions, self.dise_start, self.act_cardinality, self.slot_cardinality, 
+        #     self.dise_sym_mat, self.sym_dise_mat, self.sym_prio, self.dise_num, self.symp_num)
+
+        #     self.tran_mat.data = relation_init
+        # else:
+        self.tran_mat = None
+        self.knowledge_branch = None
+
+    def reset_parameters(self):
+        stdv = 1.0 / math.sqrt(self.hidden_size)
+        self.tran_mat.data.uniform_(-stdv, stdv)
+
+    def forward(self, state, sym_flag):
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+
+        # dqn+knowledge+relation
+        # if self.kg_enabled:
+            # rule_res = self.sym_dise_mat 
+            # relation_res = torch.matmul(x, F.softmax(self.tran_mat, 0))
+            # x = torch.sigmoid(x) + torch.sigmoid(relation_res) + rule_res
+        x = torch.sigmoid(x) + self.sym_dise_mat
+        # else:
+        #     x = torch.sigmoid(x)
+
+        x = x * sym_flag
+        
+        return x
+
+    def predict(self, x, sym_flag):
+        with torch.no_grad():
+            a = self.forward(x, sym_flag).max(1)[1].view(1, 1)
+        return a.item()

@@ -9,6 +9,9 @@ np.set_printoptions(threshold=sys.maxsize)
 goal_set = pickle.load(open("goal_dict_original.p", "rb"))
 train_set = goal_set["train"]
 test_set = goal_set["test"]
+
+high_freq = pickle.load(open("req_dise_sym_dict.p", "rb"))
+print(high_freq)
 # new_goal_set = {"train":[], "test":[], "validate":[]}
 # for goal in train_set:
 #     for key, val in goal["goal"].items():
@@ -28,6 +31,12 @@ test_set = goal_set["test"]
 # sym_given_dis = np.loadtxt("sym_dise_pro.txt")
 # dis_given_sym = np.loadtxt("dise_sym_pro.txt")
 # slot_set = pickle.load(open("slot_set.p", "rb"))
+# all_ = [None for i in range(len(slot_set.keys()))]
+# for key, idx in slot_set.items():
+#     if idx >= len(all_):
+#         print(key, idx)
+#         break
+#     all_[idx] = key
 # print(slot_set)
 # action_mat = np.zeros([len(sym_dict)+len(dise_dict)+2, len(sym_dict)+len(dise_dict)+2])
 # action_mat[0, 0] = 1
@@ -89,47 +98,46 @@ test_set = goal_set["test"]
 
 # dise_sym_num_dict =  []
 # disease_cnt = {}
-symptom_cnt = {}
 # vals2 = np.zeros([len(sym_dict), len(dise_dict)]) #sym_dise_pro
 # vals3 = np.zeros([len(dise_dict), len(sym_dict)]) #dise_sym_pro
-for goal in goal_set["train"]+goal_set["test"]:
-    # disease = goal["disease_tag"]
-    # if disease not in symptom_given_disease.keys():
-    #     symptom_given_disease[disease] = {}
-    #     req[disease] = []
-    # else:
-    #     disease_sym_num_dict[disease] = 1
+# for goal in goal_set["train"]+goal_set["test"]:
+#     # disease = goal["disease_tag"]
+#     # if disease not in symptom_given_disease.keys():
+#     #     symptom_given_disease[disease] = {}
+#     #     req[disease] = []
+#     # else:
+#     #     disease_sym_num_dict[disease] = 1
 
-    for symptom, val in goal["implicit_inform_slots"].items():
-        if val == True:
-            # if symptom in symptom_given_disease[disease].keys():
-            #     symptom_given_disease[disease][symptom] += 1
-            # else:
-            #     symptom_given_disease[disease][symptom] = 1
+#     for symptom, val in goal["implicit_inform_slots"].items():
+#         if val == True:
+#             # if symptom in symptom_given_disease[disease].keys():
+#             #     symptom_given_disease[disease][symptom] += 1
+#             # else:
+#             #     symptom_given_disease[disease][symptom] = 1
 
-            if symptom in symptom_cnt.keys():
-                symptom_cnt[symptom] += 1
-            else:
-                symptom_cnt[symptom] = 1
-    for symptom, val in goal["explicit_inform_slots"].items():
-        # if val == True:
-        #     if symptom in symptom_given_disease[disease].keys():
-        #         symptom_given_disease[disease][symptom] += 1
-        #     else:
-        #         symptom_given_disease[disease][symptom] = 1
+#             if symptom in symptom_cnt.keys():
+#                 symptom_cnt[symptom] += 1
+#             else:
+#                 symptom_cnt[symptom] = 1
+#     for symptom, val in goal["explicit_inform_slots"].items():
+#         # if val == True:
+#         #     if symptom in symptom_given_disease[disease].keys():
+#         #         symptom_given_disease[disease][symptom] += 1
+#         #     else:
+#         #         symptom_given_disease[disease][symptom] = 1
 
-            if symptom in symptom_cnt.keys():
-                symptom_cnt[symptom] += 1
-            else:
-                symptom_cnt[symptom] = 1
-sort_symptoms = sorted(symptom_cnt.items(), key=lambda x:x[1], reverse=True)
-# print(sort_symptoms)
-high_freq = []
-for p in sort_symptoms:
-    if len(high_freq) > 90:
-        break
-    high_freq.append(p[0])
-print(high_freq)
+#             if symptom in symptom_cnt.keys():
+#                 symptom_cnt[symptom] += 1
+#             else:
+#                 symptom_cnt[symptom] = 1
+# sort_symptoms = sorted(symptom_cnt.items(), key=lambda x:x[1], reverse=True)
+# # print(sort_symptoms)
+# high_freq = []
+# for p in sort_symptoms:
+#     if len(high_freq) > 90:
+#         break
+#     high_freq.append(p[0])
+# print(high_freq)
 
 # for disease, symps in symptom_given_disease.items():
 #     sort_symptoms = sorted(symps.items(), key=lambda x: x[1], reverse=True)

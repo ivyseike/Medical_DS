@@ -62,8 +62,8 @@ parser.add_argument('--learning_phase', dest='learning_phase', default='train', 
 parser.add_argument('--train_set', dest='train_set', default='train', type=str, help='train/test/all; default is all')
 parser.add_argument('--test_set', dest='test_set', default='test', type=str, help='train/test/all; default is all')
 
-parser.add_argument('--kg_enabled', dest='kg_enabled', type=bool, default=True)
-parser.add_argument('--hrl_enbaled', dest='hrl_enabled', type=bool, default=False)
+parser.add_argument('--kg_enabled', dest='kg_enabled', type=bool, default=False)
+parser.add_argument('--hrl_enbaled', dest='hrl_enabled', type=bool, default=True)
 
 args = parser.parse_args()
 params = vars(args)
@@ -72,8 +72,7 @@ print('Dialog Parameters: ')
 print(json.dumps(params, indent=2))
 
 data_folder = params['data_folder']
-if params['hrl_enabled'] == False and data_folder.endswith("simulated"):
-    data_folder += "/labelall"
+data_folder += "/labelall"
 
 goal_set = load_pickle('{}/goal_dict_original.p'.format(data_folder))
 act_set = text_to_dict('{}/dia_acts.txt'.format(data_folder))  # all acts
@@ -160,6 +159,7 @@ test_user_sim = TestRuleSimulator(sym_dict, act_set, slot_set, goal_set, usersim
 # Dialog Manager
 ################################################################################
 dm_params = {}
+dm_params['hrl_enabled'] = params['hrl_enabled']
 dialog_manager = DialogManager(agent, user_sim, act_set, slot_set, dm_params)
 test_dialog_manager = DialogManager(agent, test_user_sim, act_set, slot_set, dm_params)
 status = {'successes': 0, 'count': 0, 'cumulative_reward': 0}
@@ -377,7 +377,8 @@ def training(count):
         # simulation dialogs
         if agt == 9:
             user_sim.data_split = train_set
-            agent.predict_mode = True
+            agent.set_predict_mode(True)
+            # agent.predict_mode = True
             print("data split len " + str(len(user_sim.start_set[user_sim.data_split])))
             # simulate dialogs and save experience
             res = simulation_epoch(simulation_epoch_size)
@@ -386,10 +387,10 @@ def training(count):
 
             # train by current experience pool
             agent.train()
-            agent.predict_mode = False
+            agent.set_predict_mode(False)
 
             # evaluation and test
-            #eval_res = eval(5 * simulation_epoch_size, train_set)
+            # eval_res = eval(5 * simulation_epoch_size, train_set)
             # eval_res = test(len(goal_set[train_set]), train_set)
             # writer.add_scalar('eval/accracy', torch.tensor(eval_res['success_rate'], device=dialog_config.device), episode)
             # writer.add_scalar('eval/ave_reward', torch.tensor(eval_res['ave_reward'], device=dialog_config.device), episode)
@@ -399,14 +400,13 @@ def training(count):
             # eval_turn_history.append(eval_res["ave_turns"])
 
             test_res = test(len(goal_set[test_set]), test_set)
-            #test_res = eval(5 * simulation_epoch_size, test_set)
             writer.add_scalar('test/accracy', torch.tensor(test_res['success_rate'], device=dialog_config.device), episode)
             writer.add_scalar('test/ave_reward', torch.tensor(test_res['ave_reward'], device=dialog_config.device), episode)
             writer.add_scalar('test/ave_turns', torch.tensor(test_res['ave_turns'], device=dialog_config.device), episode)
 
-            test_reward_history.append(test_res["ave_reward"])
-            test_acc_history.append(test_res["success_rate"])
-            test_turn_history.append(test_res["ave_turns"])
+            # test_reward_history.append(test_res["ave_reward"])
+            # test_acc_history.append(test_res["success_rate"])
+            # test_turn_history.append(test_res["ave_turns"])
 
             if test_res['success_rate'] > best_te_res['success_rate']:
                 best_te_model['model'] = agent.model.state_dict()
@@ -428,29 +428,8 @@ def training(count):
             #     best_res['ave_turns'] = eval_res['ave_turns']
             #     best_res['epoch'] = episode
             #     save_model(params['write_model_dir'], agt, agent, episode, best_epoch=best_res['epoch'], best_success_rate=best_res['success_rate'], best_ave_turns=best_res['ave_turns'], phase="eval")
-            # save_model(params['write_model_dir'], agt, agent, episode, is_checkpoint=True)  # save checkpoint each episode
+            save_model(params['write_model_dir'], agt, agent, episode, is_checkpoint=True)  # save checkpoint each episode
         
-        if episode and episode % 1000 == 0:
-            x = range(episode+1)
-            # plt.plot(x, eval_reward_history,'r--',label='eval')
-            plt.plot(x, test_reward_history,'b--',label='test')
-            plt.show()
-
-            # plt.plot(x, eval_acc_history)
-            plt.plot(x, test_acc_history)
-            plt.show()
-
-
-    # x = range(count)
-    # plt.plot(x, simulation_reward)
-    # plt.show()
-
-    # plt.plot(x, simulation_success_rate)
-    # plt.show()
-
-    
-
-
 training(num_episodes)#1000轮
 # x = range(num_episodes)
 # plt.plot(x, eval_reward_history,'r--',label='eval')

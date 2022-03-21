@@ -23,6 +23,7 @@ class DialogManager:
         self.episode_over = False
         self.dialog_status = dialog_config.NO_OUTCOME_YET
         self.hit_rate = 0
+        self.hrl_enabled = params['hrl_enabled']
          
     def initialize_episode(self):
         """ Refresh state for new dialog """
@@ -44,7 +45,10 @@ class DialogManager:
 
         #   CALL AGENT TO TAKE HER TURN
         self.state = self.state_tracker.get_state_for_agent()
-        self.agent_action, repeat = self.agent.state_to_action(self.state)
+        if self.hrl_enabled:
+            self.agent_action, self.master_action, self.worker_action = self.agent.state_to_action(self.state)
+        else:
+            self.agent_action = self.agent.state_to_action(self.state)
         
         #   Register AGENT action with the state_tracker
         self.state_tracker.update(agent_action=self.agent_action)
@@ -65,8 +69,12 @@ class DialogManager:
 
         #  Inform agent of the outcome for this timestep (s_t, a_t, r, s_{t+1}, episode_over)
         if record_training_data:
-            self.agent.register_experience_replay_tuple(self.state, self.agent_action, self.reward,
-                                                        self.state_tracker.get_state_for_agent(), self.episode_over)
+            if self.hrl_enabled:
+                self.agent.register_experience_replay_tuple(self.state, self.master_action, self.worker_action, self.reward,
+                                                        self.state_tracker.get_state_for_agent(), self.episode_over, self.goal["disease_tag"])
+            else:
+                self.agent.register_experience_replay_tuple(self.state, self.agent_action, self.reward, self.state_tracker.get_state_for_agent(), self.episode_over)
+
         self.hit_rate += hit
         return self.episode_over, self.reward, self.dialog_status, self.hit_rate
 
@@ -74,12 +82,12 @@ class DialogManager:
     def reward_function(self, dialog_status, hit_rate, turn_num):
         """ Reward Function 1: a reward function based on the dialog_status """
         if dialog_status == dialog_config.FAILED_DIALOG:
-            if turn_num < 10:
-                reward = -1*self.user.max_turn - (10 - turn_num)  # -22
-            else:
-                reward = -1*self.user.max_turn
+            reward = -1
+            # reward = -1 * self.user.max_turn
+            # reward = -1 * self.user.max_turn - (self.user.max_turn - turn_num)  # -22
         elif dialog_status == dialog_config.SUCCESS_DIALOG:
-            reward =  2 * self.user.max_turn  # 44
+            reward = 1
+            # reward =  2 * self.user.max_turn  # 44
         else:
             reward = hit_rate
         return reward
